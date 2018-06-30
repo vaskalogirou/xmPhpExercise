@@ -30,15 +30,6 @@ class Company
 		$this->_summaryQuote = $params[7];
 	}
 
-	static function getCompanies()
-	{
-		if (self::$_companies == null) {
-			self::$_companies = Utilities::getCompaniesFromCsv("../resources/testList.csv");
-		}
-
-		return self::$_companies;
-	}
-
 	function __toString()
 	{
 		$delimiter = ", ";
@@ -58,4 +49,32 @@ class Company
 	{
 		return $this->_symbol;
 	}
+
+	function getName()
+	{
+		return $this->_name;
+	}
+
+	static function getCompanies()
+	{
+		if (self::$_companies == null) {
+//			$path = "../resources/testList.csv";
+			$path = "../resources/companyList.csv";
+			self::$_companies = Utilities::getCompaniesFromCsv($path);
+		}
+
+		return self::$_companies;
+	}
+
+	static function getCompanyBySymbol($symbol)
+	{
+		$sanitizedSymbol = strtoupper(trim($symbol));
+		foreach (self::getCompanies() as $company) {
+			if ($sanitizedSymbol == $company->getName()) {
+				return $company;
+			}
+		}
+		return null;
+	}
+
 }
