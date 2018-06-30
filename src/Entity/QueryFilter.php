@@ -3,11 +3,13 @@
 namespace App\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as CustomAssert;
 
 class QueryFilter
 {
 	/**
 	 * @Assert\NotBlank()
+	 * @CustomAssert\CompanySymbolExists
 	 */
 	protected $_companySymbol;
 

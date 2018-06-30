@@ -1,7 +1,13 @@
 <?php
+
+namespace App\Validator\Constraints;
+
+use Symfony\Component\Validator\Constraint;
+
 /**
- * Created by PhpStorm.
- * User: Alkis
- * Date: 6/30/2018
- * Time: 10:12 PM
+ * @Annotation
  */
+class CompanySymbolExists extends Constraint
+{
+	public $message = 'We could not find a company with the symbol" "{{ string }}"';
+}

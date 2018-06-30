@@ -3,6 +3,8 @@
 namespace App\Validator\Constraints;
 
 use App\Entity\Company;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
 
 class CompanySymbolExistsValidator extends ConstraintValidator
 {
