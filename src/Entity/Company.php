@@ -30,7 +30,7 @@ class Company
 		$this->_summaryQuote = $params[7];
 	}
 
-	function getCompanies()
+	static function getCompanies()
 	{
 		if (self::$_companies == null) {
 			self::$_companies = Utilities::getCompaniesFromCsv("../resources/testList.csv");
@@ -52,5 +52,10 @@ class Company
 		$result .= 'industry: ' . $this->_industry . $delimiter;
 		$result .= 'Summary Quote: ' . $this->_summaryQuote;
 		return $result;
+	}
+
+	function getSymbol()
+	{
+		return $this->_symbol;
 	}
 }
