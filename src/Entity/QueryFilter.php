@@ -22,6 +22,7 @@ class QueryFilter
 	/**
 	 * @Assert\NotBlank()
 	 * @Assert\Type("\DateTime")
+	 * @Assert\Expression("value >= this.getStartDate()", message="The start date should be earlier than the end date!")
 	 */
 	protected $_endDate;
 
