@@ -22,4 +22,5 @@ input {
 
 button {
     float: right;
+    margin: 3px;
 }

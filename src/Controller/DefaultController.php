@@ -28,18 +28,18 @@ class DefaultController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$form = $this->_getQueryFilterForm();
+		$form = $this->_buildQueryFilterForm();
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
 			$queryFilter = $form->getData();
 			$url = $queryFilter->buildUrl();
 			$this->_logger->info($url);
-//			$source = file_get_contents($url);
-//			$htmlTable = Utilities::csvStringToHtmlTable($source);
-//			$message = $queryFilter->composeMessage();
-//			$this->get('mailer')->send($message);
-//			return $this->render('default/display.html.twig', ['table' => $htmlTable]);
+			$source = file_get_contents($url);
+			$htmlTable = Utilities::csvStringToHtmlTable($source);
+			$message = $queryFilter->composeMessage();
+			$this->get('mailer')->send($message);
+			return $this->render('default/display.html.twig', ['table' => $htmlTable]);
 		}
 
 		$viewParams = [
@@ -49,18 +49,7 @@ class DefaultController extends Controller
 		return $this->render('default/index.html.twig', $viewParams);
 	}
 
-	/**
-	 * @Route("/test", name="test")
-	 */
-	public function test()
-	{
-		$symbol = 'DDD';
-		$company = Company::getCompanyBySymbol($symbol, $this->_logger);
-		$name = $company->getName();
-		$this->_logger->info($name);
-	}
-
-	private function _getQueryFilterForm()
+	private function _buildQueryFilterForm()
 	{
 		$queryFilter = new QueryFilter();
 		$form = $this->createFormBuilder($queryFilter)
@@ -68,7 +57,7 @@ class DefaultController extends Controller
 			->add('startDate', TextType::class)
 			->add('endDate', TextType::class)
 			->add('email', EmailType::class)
-			->add('save', SubmitType::class, ['label' => 'Create Task'])
+			->add('save', SubmitType::class, ['label' => 'Display Data'])
 			->getForm();
 		return $form;
 	}
