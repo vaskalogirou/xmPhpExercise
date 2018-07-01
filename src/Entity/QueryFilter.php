@@ -15,13 +15,13 @@ class QueryFilter
 
 	/**
 	 * @Assert\NotBlank()
-	 * @Assert\Type("\DateTime")
+	 * @Assert\Date()
 	 */
 	protected $_startDate;
 
 	/**
 	 * @Assert\NotBlank()
-	 * @Assert\Type("\DateTime")
+	 * @Assert\Date()
 	 * @Assert\Expression("value >= this.getStartDate()", message="The start date should be earlier than the end date!")
 	 */
 	protected $_endDate;
@@ -33,7 +33,6 @@ class QueryFilter
 	protected $_email;
 
 	const BASE_URL = 'https://www.quandl.com/api/v3/datasets/WIKI/';
-	const DEFAULT_FORMAT = 'Y-m-d';
 	const SENDER_MAIL = 'vaskalogirou@gmail.com';
 
 	function getCompanySymbol()
@@ -78,12 +77,10 @@ class QueryFilter
 
 	function buildUrl()
 	{
-		$startDate = $this->_startDate->format(self::DEFAULT_FORMAT);
-		$endDate = $this->_endDate->format(self::DEFAULT_FORMAT);
 		$data = [
 			'order' => 'asc',
-			'start_date' => $startDate,
-			'end_date' => $endDate
+			'start_date' => $this->_startDate,
+			'end_date' => $this->_endDate
 		];
 		$queryString = http_build_query($data);
 		$uri = self::BASE_URL . $this->_companySymbol . '.csv?' . $queryString;
@@ -114,9 +111,9 @@ class QueryFilter
 	private function _getMailBody()
 	{
 		$result = 'From ';
-		$result .= $this->_startDate->format(self::DEFAULT_FORMAT);
+		$result .= $this->_startDate;
 		$result .= ' to ';
-		$result .= $this->_endDate->format(self::DEFAULT_FORMAT);
+		$result .= $this->_endDate;
 		return $result;
 	}
 }

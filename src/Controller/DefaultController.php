@@ -35,11 +35,11 @@ class DefaultController extends Controller
 			$queryFilter = $form->getData();
 			$url = $queryFilter->buildUrl();
 			$this->_logger->info($url);
-			$source = file_get_contents($url);
-			$table = Utilities::csvStringToHtmlTable($source);
-			$message = $queryFilter->composeMessage();
+//			$source = file_get_contents($url);
+//			$htmlTable = Utilities::csvStringToHtmlTable($source);
+//			$message = $queryFilter->composeMessage();
 //			$this->get('mailer')->send($message);
-			return $this->render('default/display.html.twig', ['table' => $table]);
+//			return $this->render('default/display.html.twig', ['table' => $htmlTable]);
 		}
 
 		$viewParams = [
@@ -65,8 +65,8 @@ class DefaultController extends Controller
 		$queryFilter = new QueryFilter();
 		$form = $this->createFormBuilder($queryFilter)
 			->add('companySymbol', TextType::class)
-			->add('startDate', DateType::class)
-			->add('endDate', DateType::class)
+			->add('startDate', TextType::class)
+			->add('endDate', TextType::class)
 			->add('email', EmailType::class)
 			->add('save', SubmitType::class, ['label' => 'Create Task'])
 			->getForm();
