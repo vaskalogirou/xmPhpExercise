@@ -32,43 +32,59 @@ class QueryFilter
 	 */
 	protected $_email;
 
-	public function getCompanySymbol()
+	const BASE_URL = 'https://www.quandl.com/api/v3/datasets/WIKI/';
+
+	function getCompanySymbol()
 	{
 		return $this->_companySymbol;
 	}
 
-	public function setCompanySymbol($companySymbol)
+	function setCompanySymbol($companySymbol)
 	{
-		$this->_companySymbol = $companySymbol;
+		$this->_companySymbol = strtoupper(trim($companySymbol));
 	}
 
-	public function getStartDate()
+	function getStartDate()
 	{
 		return $this->_startDate;
 	}
 
-	public function setStartDate($startDate)
+	function setStartDate($startDate)
 	{
 		$this->_startDate = $startDate;
 	}
 
-	public function getEndDate()
+	function getEndDate()
 	{
 		return $this->_endDate;
 	}
 
-	public function setEndDate($endDate)
+	function setEndDate($endDate)
 	{
 		$this->_endDate = $endDate;
 	}
 
-	public function getEmail()
+	function getEmail()
 	{
 		return $this->_email;
 	}
 
-	public function setEmail($email)
+	function setEmail($email)
 	{
 		$this->_email = $email;
+	}
+
+	function buildUrl()
+	{
+		$startDate = $this->_startDate->format('Y-m-d');
+		$endDate = $this->_endDate->format('Y-m-d');
+		$data = [
+			'order' => 'asc',
+			'start_date' => $startDate,
+			'end_date' => $endDate
+		];
+		$queryString = http_build_query($data);
+		$uri = self::BASE_URL . $this->_companySymbol . '.csv?' . $queryString;
+		return $uri;
 	}
 }
