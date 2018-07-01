@@ -30,21 +30,6 @@ class Company
 		$this->_summaryQuote = $params[7];
 	}
 
-	function __toString()
-	{
-		$delimiter = ", ";
-		$result = '';
-		$result .= 'Symbol: ' . $this->_symbol . $delimiter;
-		$result .= 'Name: ' . $this->_name . $delimiter;
-		$result .= 'LastSale: ' . $this->_lastSale . $delimiter;
-		$result .= 'MarketCap: ' . $this->_marketCap . $delimiter;
-		$result .= 'IPOyear: ' . $this->_ipoYear . $delimiter;
-		$result .= 'Sector: ' . $this->_sector . $delimiter;
-		$result .= 'industry: ' . $this->_industry . $delimiter;
-		$result .= 'Summary Quote: ' . $this->_summaryQuote;
-		return $result;
-	}
-
 	function getSymbol()
 	{
 		return $this->_symbol;
@@ -61,7 +46,6 @@ class Company
 			$path = "../resources/companyList.csv";
 			self::$_companies = Utilities::getCompaniesFromCsv($path);
 		}
-
 		return self::$_companies;
 	}
 
@@ -74,5 +58,4 @@ class Company
 		}
 		return null;
 	}
-
 }

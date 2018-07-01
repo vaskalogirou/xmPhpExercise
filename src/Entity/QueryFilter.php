@@ -33,6 +33,8 @@ class QueryFilter
 	protected $_email;
 
 	const BASE_URL = 'https://www.quandl.com/api/v3/datasets/WIKI/';
+	const DEFAULT_FORMAT = 'Y-m-d';
+	const SENDER_MAIL = 'vaskalogirou@gmail.com';
 
 	function getCompanySymbol()
 	{
@@ -76,8 +78,8 @@ class QueryFilter
 
 	function buildUrl()
 	{
-		$startDate = $this->_startDate->format('Y-m-d');
-		$endDate = $this->_endDate->format('Y-m-d');
+		$startDate = $this->_startDate->format(self::DEFAULT_FORMAT);
+		$endDate = $this->_endDate->format(self::DEFAULT_FORMAT);
 		$data = [
 			'order' => 'asc',
 			'start_date' => $startDate,
@@ -86,5 +88,35 @@ class QueryFilter
 		$queryString = http_build_query($data);
 		$uri = self::BASE_URL . $this->_companySymbol . '.csv?' . $queryString;
 		return $uri;
+	}
+
+	function composeMessage()
+	{
+		$name = $this->_getCompanyName();
+		$emailAddress = trim($this->_email);
+		$body = $this->_getMailBody();
+
+		$message = (new \Swift_Message())
+			->setSubject($name)
+			->setFrom(self::SENDER_MAIL)
+			->setTo($emailAddress)
+			->setBody($body);
+		return $message;
+	}
+
+	private function _getCompanyName()
+	{
+		$symbol = $this->_companySymbol;
+		$company = Company::getCompanyBySymbol($symbol);
+		return $company->getName();
+	}
+
+	private function _getMailBody()
+	{
+		$result = 'From ';
+		$result .= $this->_startDate->format(self::DEFAULT_FORMAT);
+		$result .= ' to ';
+		$result .= $this->_endDate->format(self::DEFAULT_FORMAT);
+		return $result;
 	}
 }

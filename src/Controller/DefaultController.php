@@ -16,11 +16,11 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 
 class DefaultController extends Controller
 {
-	private $logger;
+	private $_logger;
 
 	public function __construct(LoggerInterface $logger)
 	{
-		$this->logger = $logger;
+		$this->_logger = $logger;
 	}
 
 	/**
@@ -33,8 +33,13 @@ class DefaultController extends Controller
 
 		if ($form->isSubmitted() && $form->isValid()) {
 			$queryFilter = $form->getData();
-			$this->_sendMail($queryFilter);
-//			return $this->redirectToRoute('test');
+			$url = $queryFilter->buildUrl();
+			$this->_logger->info($url);
+			$source = file_get_contents($url);
+			$table = Utilities::csvStringToHtmlTable($source);
+			$message = $queryFilter->composeMessage();
+//			$this->get('mailer')->send($message);
+			return $this->render('default/display.html.twig', ['table' => $table]);
 		}
 
 		$viewParams = [
@@ -42,6 +47,17 @@ class DefaultController extends Controller
 			'clientSideValidation' => $request->get('clientSideValidation')
 		];
 		return $this->render('default/index.html.twig', $viewParams);
+	}
+
+	/**
+	 * @Route("/test", name="test")
+	 */
+	public function test()
+	{
+		$symbol = 'DDD';
+		$company = Company::getCompanyBySymbol($symbol, $this->_logger);
+		$name = $company->getName();
+		$this->_logger->info($name);
 	}
 
 	private function _getQueryFilterForm()
@@ -55,37 +71,5 @@ class DefaultController extends Controller
 			->add('save', SubmitType::class, ['label' => 'Create Task'])
 			->getForm();
 		return $form;
-	}
-
-	private function _sendMail($queryFilter)
-	{
-		$name = $this->_getCompanyNameByFilter($queryFilter);
-		$email = trim($queryFilter->getEmail());
-		$body = $this->_getMailBody($queryFilter);
-
-
-		$message = (new \Swift_Message())
-			->setSubject($name)
-			->setFrom('vaskalogirou@gmail.com')
-			->setTo($email)
-			->setBody($body);
-//		$this->get('mailer')->send($message);
-	}
-
-	private function _getCompanyNameByFilter($queryFilter)
-	{
-		$symbol = $queryFilter->getName();
-		$company = Company::getCompanyBySymbol($symbol);
-		$name = $company->getName();
-		return $name;
-	}
-
-	private function _getMailBody($queryFilter)
-	{
-		$result = 'From ';
-		$result .= $queryFilter->getStartDate();
-		$result .= ' to ';
-		$result .= $queryFilter->getEndDate();
-		return $result;
 	}
 }
