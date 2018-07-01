@@ -1,0 +1,25 @@
+
+body {
+    text-align: center;
+    padding-top: 100px;
+}
+
+form {
+    display: inline-block;
+}
+
+label {
+    width: 200px;
+    display: block;
+    float: left;
+    text-align: left;
+    margin: 3px;
+}
+
+input {
+    margin: 3px;
+}
+
+button {
+    float: right;
+}
