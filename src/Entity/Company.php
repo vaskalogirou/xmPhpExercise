@@ -58,7 +58,6 @@ class Company
 	static function getCompanies()
 	{
 		if (self::$_companies == null) {
-//			$path = "../resources/testList.csv";
 			$path = "../resources/companyList.csv";
 			self::$_companies = Utilities::getCompaniesFromCsv($path);
 		}
@@ -68,9 +67,8 @@ class Company
 
 	static function getCompanyBySymbol($symbol)
 	{
-		$sanitizedSymbol = strtoupper(trim($symbol));
 		foreach (self::getCompanies() as $company) {
-			if ($sanitizedSymbol == $company->getName()) {
+			if ($symbol == $company->getSymbol()) {
 				return $company;
 			}
 		}
